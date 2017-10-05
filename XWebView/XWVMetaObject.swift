@@ -227,7 +227,7 @@ extension XWVMetaObject: Collection {
     var endIndex: Index {
         return members.endIndex
     }
-    subscript (_ i: Index) -> (String, Member) {
+    subscript (_ i: Index) -> (key: String, value:Member) {
         return members[i]
     }
     subscript (_ range: Range<Index>) -> SubSequence {
@@ -244,7 +244,7 @@ private func instanceMethods(forProtocol aProtocol: Protocol) -> Set<Selector> {
         let methodList = protocol_copyMethodDescriptionList(aProtocol.self, req, inst, nil)
         if var desc = methodList {
             while desc.pointee.name != nil {
-                selectors.insert(desc.pointee.name)
+                selectors.insert(desc.pointee.name!)
                 desc = desc.successor()
             }
             free(methodList)
