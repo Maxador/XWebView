@@ -186,10 +186,12 @@ class XWVMetaObject {
         }
 
         // enumerate methods
-        let methodList = class_copyMethodList(plugin, nil)
-        if var method = methodList {
+        var methodCount: UnsafeMutablePointer<UInt32>?
+        let methodList = class_copyMethodList(plugin, methodCount)
+        if var method = methodList, let count = methodCount?.pointee {
             defer { free(methodList) }
-            while method.pointee != nil {
+            var counter: UInt32 = 0
+            while counter < count {
                 let sel = method_getName(method.pointee)
                 if !known.contains(sel) && !sel.description.hasPrefix(".") {
                     let arity = Int32(method_getNumberOfArguments(method.pointee)) - 2
@@ -208,6 +210,7 @@ class XWVMetaObject {
                     }
                 }
                 method = method.successor()
+                counter += 1
             }
         }
         return true
