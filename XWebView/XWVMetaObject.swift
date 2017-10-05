@@ -190,8 +190,9 @@ class XWVMetaObject {
         let methodList = class_copyMethodList(plugin, methodCount)
         if var method = methodList, let count = methodCount?.pointee {
             defer { free(methodList) }
-            var counter: UInt32 = 0
-            while counter < count {
+            let countInt = Int(count)
+            var counter = 0
+            while counter < countInt {
                 let sel = method_getName(method.pointee)
                 if !known.contains(sel) && !sel.description.hasPrefix(".") {
                     let arity = Int32(method_getNumberOfArguments(method.pointee)) - 2
